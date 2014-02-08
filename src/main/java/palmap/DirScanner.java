@@ -13,6 +13,7 @@ public class DirScanner {
 	private String srcPath;
 	private String dirPath;
 	public int count = 0;
+	private boolean floorexsits = false;
 	
 	public DirScanner(String srcPath, String dirPath) throws IOException {
 		this.srcPath = srcPath;
@@ -37,10 +38,26 @@ public class DirScanner {
 				MdbOper mdbOper = new MdbOper(srcPath, file.toString());
 				mdbOper.setNewUDID("Mall");
 				count++;
+				floorexsits = true;
 				System.out.println(file.getParent().getFileName().toString()+"修改完成");
 			}
 			return FileVisitResult.CONTINUE;
 		}
+
+		@Override
+		public FileVisitResult postVisitDirectory(Path dir, IOException exc)
+				throws IOException {
+			if (dir.getParent().equals(Paths.get(dirPath))) {
+				if (floorexsits) {
+					floorexsits = false;
+				} else {
+					System.out.println(dir.getFileName()+"不包含Floor.mdb");
+				}
+			}
+			
+			return FileVisitResult.CONTINUE;
+		}
+		
 
 	}	
 	

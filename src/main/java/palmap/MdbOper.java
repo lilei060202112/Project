@@ -56,21 +56,24 @@ public class MdbOper {
 		iQueryFilter.setWhereClause(string);
 		ICursor iCursor = iTable.ITable_search(iQueryFilter, false);
 		IRow iRow = iCursor.nextRow();
-		int newValue = (Integer)iRow.getValue(iTable.getFields().findField("UDID"));
+		if (iRow != null) {
+			int newValue = (Integer)iRow.getValue(iTable.getFields().findField("UDID"));
+			
+			//--set新值
+			ITable it = desFeatureWorkspace.openTable(tableName);
+			IWorkspaceEdit iwe = (IWorkspaceEdit) desFeatureWorkspace;
+			iwe.startEditing(true);
+			iwe.startEditOperation();
+			ICursor desCursor = it.update(null, false);
+			int index = desCursor.findField("UDID");
+			IRow desRow = desCursor.nextRow();
+			//set值时，不能是long型，可以是int
+			desRow.setValue(index, newValue);
+			desCursor.updateRow(desRow);
+			iwe.stopEditOperation();
+			iwe.stopEditing(true);
+		}
 		
-		//--set新值
-		ITable it = desFeatureWorkspace.openTable(tableName);
-		IWorkspaceEdit iwe = (IWorkspaceEdit) desFeatureWorkspace;
-		iwe.startEditing(true);
-		iwe.startEditOperation();
-		ICursor desCursor = it.update(null, false);
-		int index = desCursor.findField("UDID");
-		IRow desRow = desCursor.nextRow();
-		//set值时，不能是long型，可以是int
-		desRow.setValue(index, newValue);
-		desCursor.updateRow(desRow);
-		iwe.stopEditOperation();
-		iwe.stopEditing(true);
 	}
 	
 }
