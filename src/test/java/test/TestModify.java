@@ -14,7 +14,7 @@ public class TestModify {
 	public static void main(String[] args) throws IOException {
 		EngineInitializer.initializeEngine();
 		initializeArcGISLicenses();
-		ModifyUdidUtil mum = new ModifyUdidUtil("E:\\四维数据统计.mdb", "E:\\杨慧源修改");
+		ModifyUdidUtil mum = new ModifyUdidUtil(args[0], args[1]);
 		mum.modifyMdb();
 		System.out.println("修改结束,共计:"+mum.ds.count);
 	}
